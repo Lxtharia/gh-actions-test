@@ -54,6 +54,7 @@ jobs:
       if: env.TAG_NAME == 'nightly'
       with:
         name: 'Nightly Release'
+        prerelease: true
         tag_name: ${{ env.TAG_NAME }}
         files:    ${{ env.BIN_NAME }}
         
