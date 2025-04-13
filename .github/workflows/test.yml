@@ -74,7 +74,7 @@ jobs:
     - name: Publish pre-release on GitHub
       if: env.TAG_NAME == 'nightly'
       run: |
-         gh release edit \
+         gh release create \
            --verify-tag \
            --title "$TAG" \
            --notes "$NOTES" \
