@@ -1,0 +1,59 @@
+name: Build Release
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:  
+    inputs:
+      tag_name:
+        description: "Tag name of the release"
+        required: true
+# push:
+#   branches:
+#     - main
+      
+
+env:
+  CARGO_TERM_COLOR: always
+  TAG_NAME: ${{ github.event.release.tag_name || github.event.inputs.tag_name }}
+
+jobs:
+  build:
+
+    permissions:
+      contents: write  
+    runs-on: ${{ matrix.os }}
+    name: Build for ${{ matrix.os }}
+    
+    steps:
+    - uses: actions/checkout@v4
+      if: env.TAG_NAME != "nightly"
+      with: 
+        ref: ${{ env.TAG_NAME }}
+    - uses: actions/checkout@v4
+      if: env.TAG_NAME == "nightly"
+      with: 
+        ref: main
+
+    - name: Build textfile
+      shell: bash
+      run: |
+        echo "WEE WOO" > FILE.EXE
+        cat LICENSE >> FILE.EXE
+        echo "BIN_NAME=FILE.EXE" >> $GITHUB_ENV
+
+    - name: Upload Artifacts to Release
+      uses: softprops/action-gh-release@v2
+      if: env.TAG_NAME != "nightly"
+      with:
+        tag_name: ${{ env.TAG_NAME }}
+        files:    ${{ env.BIN_NAME }}
+        
+    - name: Make nightly release
+      uses: softprops/action-gh-release@v2
+      if: env.TAG_NAME == "nightly"
+      with:
+        name: "Nightly Release"
+        tag_name: ${{ env.TAG_NAME }}
+        files:    ${{ env.BIN_NAME }}
+        
