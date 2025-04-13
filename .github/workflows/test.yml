@@ -22,8 +22,8 @@ jobs:
 
     permissions:
       contents: write  
-    runs-on: ${{ matrix.os }}
-    name: Build for ${{ matrix.os }}
+    runs-on: ubuntu-latest
+    name: Build. Yeah.
     
     steps:
     - uses: actions/checkout@v4
