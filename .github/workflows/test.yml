@@ -63,31 +63,41 @@ jobs:
          TAG: nightly
          GH_TOKEN: ${{ github.token }}
          
-    - name: Delete previous nightly release
-      if: env.TAG_NAME == 'nightly'
-      run: |
-        gh release delete --yes "$TAG"
-      env:
-         TAG: nightly
-         GH_TOKEN: ${{ github.token }}
+
+    - uses: pyTooling/Actions/releaser@r0
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        tag: 'nightly'
+        files: |
+          FILE.EXE
+          README.md
          
-    - name: Publish pre-release on GitHub
-      if: env.TAG_NAME == 'nightly'
-      run: |
-         gh release create \
-           --title "$TAG" \
-           --notes "$NOTES" \
-           --prerelease \
-           --draft=false \
-           "$TAG"
-         gh release upload --clobber "$TAG" $ARTIFACTS
-      env:
-         NOTES: This is a nightly release :)
-         ARTIFACTS: >
-            FILE.EXE
-            README.md
-         TAG: nightly
-         GH_TOKEN: ${{ github.token }}
+#    - name: Delete previous nightly release
+#      if: env.TAG_NAME == 'nightly'
+#      run: |
+#        gh release delete --yes "$TAG"
+#      env:
+#         TAG: nightly
+#         GH_TOKEN: ${{ github.token }}
+#         
+#    - name: Publish pre-release on GitHub
+#      if: env.TAG_NAME == 'nightly'
+#      run: |
+#         gh release create \
+#           --title "$TAG" \
+#           --notes "$NOTES" \
+#           --prerelease \
+#           --draft=false \
+#           "$TAG"
+#         gh release upload --clobber "$TAG" $ARTIFACTS
+#      env:
+#         NOTES: This is a nightly release :)
+#         ARTIFACTS: >
+#            FILE.EXE
+#            README.md
+#         TAG: nightly
+#         GH_TOKEN: ${{ github.token }}
+#
 
         
         
